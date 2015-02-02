@@ -1,0 +1,75 @@
+Phase: NameFinder
+Input: Sentence Person
+Options: control = once debug = true
+Rule: NameRule
+(
+(({Sentence})[10])
+)
+:profileSection
+-->
+{
+	AnnotationSet firstTenSet = bindings.get("profileSection");
+	AnnotationSet personSet = inputAS.get("Person");
+
+	if(personSet != null && personSet.size() > 0){//Try to find the name within the most probable location (first 10 lines of the document; a.k.a within the first page)
+		
+		//Get the perfect match that has kind->fullname;firstname&surname within 10 sentences
+		List<Annotation> persons = personSet.getContained(firstTenSet.firstNode().getOffset(),firstTenSet.lastNode().getOffset()).inDocumentOrder();
+		for(Annotation person : persons){
+			if(person.getFeatures().containsKey("kind") && person.getFeatures().get("kind").equals("fullName") &&
+			   person.getFeatures().containsKey("firstName") &&
+			   person.getFeatures().containsKey("gender") &&
+			   person.getFeatures().containsKey("surname")){
+				FeatureMap features = person.getFeatures();
+				features.put("rule","NameRule");
+				features.put("kind","name");
+				outputAS.add(person.getStartNode(),person.getEndNode(),"NameFinder",features);
+				return;
+			}
+		}
+
+		//If not get the match that has kind->fullname within the first 10 sentences
+		for(Annotation person : persons){
+			if(person.getFeatures().containsKey("kind") && person.getFeatures().get("kind").equals("fullName")){
+				FeatureMap features = person.getFeatures();
+				features.put("rule","NameRule");
+				features.put("kind","name");
+				outputAS.add(person.getStartNode(),person.getEndNode(),"NameFinder",features);
+				return;
+			}
+		}
+		
+		// if not get the match that has kind->fullname;firstname,gender&surname in its first occurences
+		persons = personSet.inDocumentOrder();
+		for(Annotation person : persons){
+			if(person.getFeatures().containsKey("kind") && person.getFeatures().get("kind").equals("fullName") &&
+			   person.getFeatures().containsKey("firstName") &&
+			   person.getFeatures().containsKey("gender") &&
+			   person.getFeatures().containsKey("surname")){
+				FeatureMap features = person.getFeatures();
+				features.put("rule","NameRule");
+				features.put("kind","name");
+				outputAS.add(person.getStartNode(),person.getEndNode(),"NameFinder",features);
+				return;
+			}
+		}
+
+		//if not get the match that has kind->fullname in its first occurence
+		for(Annotation person : persons){
+			if(person.getFeatures().containsKey("kind") && person.getFeatures().get("kind").equals("fullName")){
+				FeatureMap features = person.getFeatures();
+				features.put("rule","NameRule");
+				features.put("kind","name");
+				outputAS.add(person.getStartNode(),person.getEndNode(),"NameFinder",features);
+				return;
+			}
+		}
+
+		// if not just get a person. No gurantee as to what will come
+		Annotation person = personSet.iterator().next();
+		FeatureMap features = person.getFeatures();
+		features.put("rule","NameRule");
+		features.put("kind","name");
+		outputAS.add(person.getStartNode(),person.getEndNode(),"NameFinder",features);
+	}
+}

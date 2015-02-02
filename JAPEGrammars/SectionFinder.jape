@@ -1,0 +1,34 @@
+Phase: SectionFinder
+Input: Lookup Token Sentence
+Options: control = appelt debug = true
+MACRO: SECTION_IDENTIFIER
+//(({Token.category==JJ} | {Token.category==JJR} | {Token.category==JJS})*({Lookup.majorType == resume,Token.orth==upperInitial}|{Lookup.majorType == resume,Token.orth==allCaps}))
+(({Token.category==JJ} | {Token.category==JJR} | {Token.category==JJS})*({Lookup.majorType == resume}))
+
+Rule: SectionTitlerule
+(
+ (SECTION_IDENTIFIER({Token.kind==punctuation}|{Token.category==CC})?(SECTION_IDENTIFIER)?)
+)
+:section
+-->
+//:section.SectionFinder={}
+{
+
+	AnnotationSet sections = bindings.get("section");
+	AnnotationSet sentences = inputAS.get("Sentence");
+	for(Annotation sentence : sentences){
+		if(sentence.getStartNode().getOffset() == sections.firstNode().getOffset()){
+			/*for(Annotation section : sections){
+				System.out.println("section"+section.type);
+			}*/
+				//System.out.println("size:"+sections.get("Lookup").size());
+				AnnotationSet annSet = sections.get("Lookup");
+				FeatureMap features = Factory.newFeatureMap();
+				for(Annotation ann : annSet){
+					features.putAll(ann.getFeatures());
+				}
+				System.out.println(features.size());
+				outputAS.add(sections.firstNode(),sections.lastNode(),"SectionFinder",features);
+		}
+	}
+}

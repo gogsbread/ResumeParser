@@ -1,0 +1,43 @@
+Phase: WorkExperienceFinder 
+Input: Lookup Token Date SectionFinder
+Options: control = appelt debug = true
+
+MACRO: TOKEN_FILLER
+(({Token})[0,4])
+
+MACRO: DATE_RULE
+({Date.rule==DateName} | {Date.rule==DateNumSlashDot} | {Date.rule==DateNumSlashDot})
+
+MACRO:WORKEX_RULE
+(
+(({Lookup.majorType==jobtitle})TOKEN_FILLER({Lookup.majorType==organization})?TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?)|
+({Lookup.majorType==jobtitle}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==organization})?)|
+(({Lookup.majorType==organization})TOKEN_FILLER({Lookup.majorType==jobtitle})?TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?) |
+({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+((DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==organization})?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+((DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?(TOKEN_FILLER{Lookup.majorType==organization})?)
+)
+
+Rule: WorkExperienceRule
+(
+ ({SectionFinder.minorType==work_experience})?
+ (WORKEX_RULE)
+ {!SectionFinder}
+ //!(WORKEX_RULE) //| ({!SectionFinder}))
+ //{!SectionFinder}
+):workex
+-->
+:workex.WorkExperienceFinder={}
+/*{
+
+	AnnotationSet addressSet = bindings.get("section");
+	AnnotationSet sentences = inputAS.get("Sentence");
+	FeatureMap features = Factory.newFeatureMap();
+	for(Annotation sentence : sentences){
+		if(sentence.getStartNode().getOffset() == addressSet.firstNode().getOffset()){
+			outputAS.add(addressSet.firstNode(),addressSet.lastNode(),"SectionFinder",features);
+		}
+	}
+	//System.out.println("size"+addressSet.size());
+}*/
