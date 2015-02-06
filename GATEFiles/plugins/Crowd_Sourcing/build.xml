@@ -1,0 +1,101 @@
+<project name="Crowd_Sourcing" basedir="." default="build">
+  <!-- Prevent Ant from warning about includeantruntime not being set -->
+  <property name="build.sysclasspath" value="ignore" />
+
+  <property file="build.properties" />
+
+  <property name="gate.home" location="../.." />
+  <property name="gate.lib" location="${gate.home}/lib" />
+  <property name="gate.jar" location="${gate.home}/bin/gate.jar" />
+  <property name="src.dir" location="src" />
+  <property name="classes.dir" location="classes" />
+  <property name="lib.dir" location="lib" />
+  <property name="jar.location" location="gate-crowd-sourcing.jar" />
+  <property name="doc.dir" location="doc" />
+  <property name="javadoc.dir" location="${doc.dir}/javadoc" />
+  <property name="gate.compile.maxwarnings" value="10000" />
+
+  <!-- Path to compile - includes gate.jar and GATE/lib/*.jar -->
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}" includes="*.jar" />
+    <pathelement location="${gate.jar}" />
+    <fileset dir="${gate.lib}">
+      <include name="**/*.jar" />
+      <include name="**/*.zip" />
+    </fileset>
+  </path>
+  
+  <!-- create build directory structure -->
+  <target name="prepare">
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <!-- compile the source -->
+  <target name="compile" depends="prepare">
+    <javac classpathref="compile.classpath"
+           srcdir="${src.dir}"
+           destdir="${classes.dir}"
+           debug="true"
+           debuglevel="lines,source,vars"
+           source="1.6"
+           target="1.6">
+		<compilerarg value="-Xmaxwarns" />
+		<compilerarg value="${gate.compile.maxwarnings}" />
+		<compilerarg value="-Xlint:all" />
+    </javac>
+  </target>
+
+  <!-- copy resource files (everything that's not .java) -->
+  <target name="copy.resources" depends="prepare">
+    <copy todir="${classes.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java" />
+    </copy>
+  </target>
+
+  <!-- Build JavaDoc documentation -->
+  <target name="doc.prepare">
+    <mkdir dir="${javadoc.dir}" />
+  </target>
+
+  <target name="javadoc" depends="doc.prepare">
+    <javadoc destdir="${javadoc.dir}" packagenames="*"
+             classpathref="compile.classpath"
+             encoding="UTF-8"
+             windowtitle="${plugin.name} JavaDoc"
+             source="1.6">
+      <sourcepath>
+        <pathelement location="${src.dir}" />
+      </sourcepath>
+      <link href="http://docs.oracle.com/javase/6/docs/api/" />
+      <link href="http://gate.ac.uk/gate/doc/javadoc/" />
+    </javadoc>
+  </target>
+
+
+  <!-- create the JAR file -->
+  <target name="jar" depends="compile, copy.resources" >
+    <jar destfile="${jar.location}"
+         update="false"
+         basedir="${classes.dir}" />
+  </target>
+
+  <!-- remove the generated .class files -->
+  <target name="clean.classes" >
+    <delete dir="${classes.dir}" />
+  </target>
+
+  <!-- Clean up - remove .class and .jar files -->
+  <target name="clean" depends="clean.classes" >
+    <delete file="${jar.location}" />
+  </target>
+
+  <!-- Targets used by the main GATE build file:
+         build: build the plugin - just calls "jar" target
+         test : run the unit tests - there aren't any
+         distro.prepare: remove intermediate files that shouldn't be in the
+                         distribution
+  -->
+  <target name="build" depends="jar" />
+  <target name="test" />
+  <target name="distro.prepare" depends="clean.classes" />
+</project>

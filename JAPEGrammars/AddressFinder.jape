@@ -1,6 +1,6 @@
 Phase: AddressFinder
 Input: Token Lookup
-Options: control = appelt debug = true
+Options: control = appelt debug = false
 MACRO: ADDRESS_WORD
 (
   {Token.kind==word, Token.category==NNP, Token.orth==upperInitial} | 
@@ -17,16 +17,11 @@ MACRO: ADDRESS_WORD
 
 Rule: AddressRule
 (
- //41, Doss sTree, anbu nagar, crawford, trichy 620012
- //877 heatherstone way APT 706,mountain view, ca, 94040
  {Token.kind == number}//building number or house number
  ({Token.string == ","})?
  (ADDRESS_WORD)[1,5] //street name
  ({Token.kind == punctuation})?//number indicator such as #
  ({Token.kind == number})?//apt. number
- /*({Token.string == ","})
- ({Token.kind==word, Token.category==NNP, Token.orth==upperInitial} | {Token.kind==word, Token.category==NNPS, Token.orth==upperInitial} | {Token.kind==word, Token.category==NN} | {Token.kind==word, Token.category==NNP, Token.orth==allCaps} |{Token.kind==word, Token.category==NNPS, Token.orth==allCaps})[1,4]
- ({Token.string == ","})*/
  (
   ({Token.string == ","})?
   (ADDRESS_WORD)
@@ -46,7 +41,7 @@ Rule: AddressRule
 	if(addressSet != null && addressSet.size() > 0){
 		//Try to find the address within the most probable location (first 10 lines of the document; a.k.a within the first page)
 		AnnotationSet addresses = addressSet.getContained(profileSection.firstNode().getOffset(),profileSection.lastNode().getOffset());
-		if(addresses != null && addresses.size() > 0){
+		if(addresses != null && addresses.size() > 0 && addressSet.lastNode().getOffset() <= profileSection.lastNode().getOffset()){
 			FeatureMap features = Factory.newFeatureMap();
 			features.put("rule","AddressRule");
 			features.put("kind","address");

@@ -1,0 +1,12 @@
+<!-- creole.xml ResumeTransducer -->
+<!--  antonydeepak, 1/2/2015 -->
+
+<!--
+This file just references the JAR file that contains the compiled resource.
+Configuration is contained in the @CreoleResource annotation on 
+code4goal.antony.resumeparser.ResumeTransducer.
+-->
+
+<CREOLE-DIRECTORY>
+  <JAR SCAN="true">ResumeTransducer.jar</JAR>
+</CREOLE-DIRECTORY>

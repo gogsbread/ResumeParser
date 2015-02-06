@@ -1,6 +1,6 @@
 Phase: TitleFinder
 Input: Lookup
-Options: control = once debug = true
+Options: control = once debug = false
 
 Rule: TitleRule
 (

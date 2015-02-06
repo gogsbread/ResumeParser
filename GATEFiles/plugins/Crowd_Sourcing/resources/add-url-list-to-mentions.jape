@@ -1,0 +1,61 @@
+/*
+ *  add-url-list-to-mentions.jape
+ *
+ *  JAPE grammar to find all the annotations of type "Url" within the
+ *  Sentence that contains each Mention annotation.  If the sentence contains
+ *  any URLs then construct an HTML list of links (<a> tags) and store this
+ *  HTML as the "detail" feature on the Mention.  This can then be picked up
+ *  by the EntityClassificationJobBuilder PR to allow workers to quickly
+ *  explore any links from the snippet they are looking at.
+ *
+ *  Copyright (c) 2014, The University of Sheffield. See the file
+ *  COPYRIGHT.txt in the software or at http://gate.ac.uk/gate/COPYRIGHT.txt
+ *
+ *  This file is part of GATE (see http://gate.ac.uk/), and is free
+ *  software, licenced under the GNU Library General Public License,
+ *  Version 3, June 2007 (in the distribution as file licence.html,
+ *  and also available at http://gate.ac.uk/gate/licence.html).
+ *  
+ *  $Id: add-url-list-to-mentions.jape 17797 2014-04-10 12:53:19Z ian_roberts $
+ */
+Imports: {
+  import static gate.Utils.*;
+  import org.apache.commons.lang.StringEscapeUtils;
+}
+
+Phase: AddUrlListToMentions
+Options: control = all
+Input: Mention
+
+Rule: AddUrls
+({Mention}):mention
+-->
+:mention {
+  Annotation mention = getOnlyAnn(mentionAnnots);
+  // find all the Sentence annotations that cover this mention (there will
+  // probably only be one of them but the logic works whatever)
+  AnnotationSet coveringSentences = getCoveringAnnotations(
+      inputAS, mention, "Sentence");
+  // find all Url annotations in the covering sentence(s)
+  List<Annotation> urls = inDocumentOrder(
+      getContainedAnnotations(inputAS, coveringSentences, "Url"));
+  if(urls.size() > 0) {
+    // build an HTML list of links for the Url annotations we found and store
+    // it as a feature on the Mention.
+    StringBuilder buf = new StringBuilder(
+        "<p>You may wish to refer to the following links:</p>\n<ul>\n");
+
+    for(Annotation u : urls) {
+      String urlString = StringEscapeUtils.escapeHtml(stringFor(doc, u));
+      buf.append("  <li><a target=\"_blank\" href=\"");
+      buf.append(urlString);
+      buf.append("\">");
+      buf.append(urlString);
+      buf.append("</a></li>\n");
+    }
+
+    buf.append("</ul>");
+
+    mention.getFeatures().put("detail", buf.toString());
+  }
+}

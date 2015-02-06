@@ -1,0 +1,124 @@
+<project name="Information_Retrieval" basedir="." default="all" >
+	<!-- Prevent Ant from warning about includeantruntime not being set -->
+	<property name="build.sysclasspath" value="ignore" />
+
+	<property file="build.properties" />
+	<property name="plugin.name" value="Information_Retrieval"/>
+
+	<!-- RUNTIME MEMORY -->
+	<property name="run.memory" value="1000M" />
+
+	<!-- Make environment variables available -->
+	<property environment="env" />
+
+	<!-- If environment variable GATE_HOME is set, use it for
+       gate.home (unless it was already set in build.properties -->
+	<condition property="gate.home" value="${env.GATE_HOME}">
+		<isset property="env.GATE_HOME"/>
+	</condition>
+
+	<property name="gate.home" location="../.." />
+	<property name="gate.lib" location="${gate.home}/lib" />
+	<property name="gate.jar" location="${gate.home}/bin/gate.jar" />
+	<property name="src.dir" location="src" />
+	<property name="classes.dir" location="classes" />
+	<property name="jar.location" location="Information_Retrieval.jar" />
+	<property name="doc.dir" location="doc" />
+	<property name="lib.dir" location="lib" />
+	<property name="javadoc.dir" location="${doc.dir}/javadoc" />
+	<property name="gate.compile.maxwarnings" value="10000" />
+
+	<!-- Path to compile - includes gate.jar and GATE/lib/*.jar -->
+	<path id="compile.classpath">
+		<pathelement location="${gate.jar}" />
+		<fileset dir="${gate.lib}">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+	<!-- create build directory structure -->
+	<target name="prepare">
+		<mkdir dir="${classes.dir}" />
+	</target>
+
+	<!-- compile the source -->
+	<target name="compile" depends="prepare">
+		<javac classpathref="compile.classpath"
+           srcdir="${src.dir}"
+           destdir="${classes.dir}"
+           debug="true"
+           debuglevel="lines,source"
+           source="1.6"
+           target="1.6">
+			<compilerarg value="-Xmaxwarns" />
+		    <compilerarg value="${gate.compile.maxwarnings}" />
+			<compilerarg value="-Xlint:all" />
+		</javac>
+	</target>
+
+	<!-- Build JavaDoc documentation -->
+	<target name="doc.prepare">
+		<mkdir dir="${javadoc.dir}" />
+	</target>
+
+	<target name="javadoc" depends="doc.prepare">
+		<javadoc destdir="${javadoc.dir}" packagenames="*"
+             classpathref="compile.classpath"
+             encoding="UTF-8"
+             windowtitle="${plugin.name} JavaDoc"
+             source="1.6">
+			<sourcepath>
+				<pathelement location="${src.dir}" />
+			</sourcepath>
+			<link href="http://docs.oracle.com/javase/6/docs/api/" />
+			<link href="http://gate.ac.uk/gate/doc/javadoc/" />
+		</javadoc>
+	</target>
+
+
+	<!-- create the JAR file -->
+	<target name="jar" depends="compile" >
+		<jar destfile="${jar.location}"
+         update="false"
+         basedir="${classes.dir}" />
+	</target>
+
+	<!-- remove the generated .class files -->
+	<target name="clean.classes" >
+		<delete dir="${classes.dir}" />
+	</target>
+
+	<!-- Clean up - remove .class and .jar files -->
+	<target name="clean" depends="clean.classes" >
+		<delete file="${jar.location}" />
+	</target>
+
+	<!-- Build everything - the code and JavaDoc -->
+	<target name="all" depends="jar, javadoc" />
+
+	<!-- Targets used by the main GATE build file:
+         build: build the plugin - just calls "jar" target
+         test : run the unit tests - there aren't any
+         distro.prepare: remove intermediate files that shouldn't be in the
+                         distribution
+  -->
+	<target name="build" depends="jar" />
+	<target name="test" depends="jar">
+		<junit fork="true" showoutput="yes" printsummary="yes" maxmemory="${run.memory}">
+			<classpath>
+				<pathelement location="${jar.location}" />
+				<path refid="compile.classpath" />
+				<pathelement location="${gate.home}/classes/test" />
+			</classpath>
+			<formatter type="xml" />
+
+			<test name="gate.creole.ir.TestIndex" />
+		</junit>
+	</target>
+	<target name="distro.prepare" depends="clean.classes" />
+</project>

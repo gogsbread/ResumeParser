@@ -1,0 +1,34 @@
+/* highlight the target entity within the unit text */
+.gate-entity {
+  color: red;
+}
+
+/* rules to turn checkboxes into clickable words for annotation jobs */
+.gate-snippet .cml_row {
+  display: inline-block;
+  float: left;
+}
+
+.gate-snippet label input {
+  float: left;
+  display: none;
+}
+
+.gate-snippet .checkboxes label input {
+  margin-left:0;
+  margin-right:0;
+}
+
+.gate-snippet label {
+  padding: 3px;
+  margin:0;
+}
+
+.gate-snippet label.selected {
+  background: #0ff;  
+}
+
+.gate-no-entities {
+  padding-top: 10px;
+  clear: both;
+}

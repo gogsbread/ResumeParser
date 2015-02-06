@@ -1,0 +1,5 @@
+<CREOLE-DIRECTORY>
+  <JAR SCAN="true">gate-crowd-sourcing.jar</JAR>
+  <JAR>lib/gson-2.2.4.jar</JAR>
+  <JAR>lib/formsrt.jar</JAR>
+</CREOLE-DIRECTORY>

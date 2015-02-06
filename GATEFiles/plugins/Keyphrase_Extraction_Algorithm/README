@@ -1,0 +1,284 @@
+=====================================================================
+                                                                       
+                              ======                                   
+                              README                                   
+                              ======                                   
+                                                                       
+                             KEA 3.0
+                          18 March 2004
+                                                                       
+           Java Programs for Automatic Keyphrase Extraction
+                                                                       
+               Copyright (C) 2000, 2001, 2004  Eibe Frank
+
+                   email: eibe@cs.waikato.ac.nz            
+                                                                       
+=====================================================================
+
+Contents:
+---------
+
+1. Installation
+
+2. Getting started
+
+   - Building a keyphrase extraction model
+   - Extracting keyphrases
+   - Important comment
+
+3. Examples
+
+4. Other documentation
+
+5. Copyright
+
+----------------------------------------------------------------------
+
+NOTE:
+-----
+
+This distribution includes a cut-down version of WEKA, the GPL'ed
+machine learning workbench available from 
+
+  http://www.cs.waikato.ac.nz/ml/weka.
+
+----------------------------------------------------------------------
+
+1. Installation:
+----------------
+
+KEA is implemented as a set of Java classes (located in the same
+directory as this README file). To run KEA you need to tell the Java
+Virtual Machine where to look for KEA classes.  One possible way of
+doing this is to add the directory that contains this README file to
+the CLASSPATH environment variable that is used by the Java Virtual
+Machine.
+
+Under Linux you would do the following:
+
+a) Set KEAHOME to be the directory which contains this README.
+
+b) Add $KEAHOME to your CLASSPATH environment variable.
+
+The on-line documentation (generated from the source code) is located
+in the doc directory. You might want to do the following to have the
+documentation handy in you web browser:
+
+c) Bookmark $KEAHOME/doc/packages.html in your web browser.
+
+----------------------------------------------------------------------
+
+2. Getting started:
+-------------------
+
+Building a keyphrase extraction model
+=====================================
+
+To extract keyphrases for new documents, you first need to build a KEA
+keyphrase extraction model from a set of documents (preferably from
+the same domain) for which you have author- assigned keyphrases. To
+this end you have to go through the following steps:
+
+a) Create a directory, called, for example, "training_documents",
+   containing the documents that you want to use for training the
+   keyphrase extractor.
+
+b) Rename the document files in that directory so that they end with
+   the suffix ".txt".
+
+c) Delete the author-assigned keyphrases from those documents
+   and put them into separate ".key" files. For example, if
+   your document file is called doc1.txt, move the keyphrases
+   into a new file called "doc1.key". It is important that
+   you put each keyphrase on a separate line in the .key file!
+
+d) Build the keyphrase extraction model by running the
+   KEAModelBuilder:
+
+   java KEAModelBuilder -l <name_of_directory> -m <name_of_model>
+
+   This will use the documents in <name_of_directory> to build a
+   keyphrase extraction model and save it in <name_of_model>.
+
+KEAModelBuilder has a few other options that you can view if you run
+KEAModelBuilder without any arguments. Here is a list of all the
+options:
+
+-l <directory name>
+	Specifies name of directory.
+-m <model name>
+	Specifies name of model.
+-e <encoding>
+	Specifies encoding.
+-d
+	Turns debugging mode on.
+-k
+	Use keyphrase frequency statistic.
+-p
+	Disallow internal periods.
+-x <length>
+	Sets the maximum phrase length (default: 3).
+-y <length>
+	Sets the minimum phrase length (default: 1).
+-o <number>
+	The minimum number of times a phrase needs to occur 
+	(default: 2).
+-s <name of stopwords class>
+        Sets the list of stopwords to use (default: StopwordsEnglish).
+-t <name of stemmer class>
+        Set the stemmer to use (default: IteratedLovinsStemmer).
+-n
+        Do not check for proper nouns.
+   
+The -e option allows you to specify a different character encoding
+supported by Java. For example, to extract keyphrases from Chinese
+documents encoded using GBK, you would use specify "-e GBK" as an
+argument.
+
+The -d option generates some output that shows the progress of the
+model builder.
+
+If -k is set, the keyphrase frequency attribute is used in the
+model. For more info on this, have a look at the paper on
+"Domain-specific keyphrase extraction" listed below. Using this option
+improves accuracy if the domain of the documents for which you want to
+extract keyphrases is the same as the domain of the training
+documents. In other words, if you want to extract keyphrases from
+papers on radiology, and your training documents are about radiology,
+you should use this option.
+
+If -p is set, KEA does not consider phrases with internal periods as
+candidate keyphrases. It is important to use this if a full stop is
+not always followed by white space in the documents.
+
+Using -s and -t you can set different classes for stopword detection
+and stemming respectively (for languages other than English).
+
+Using -d you turn KEA's heuristic for detecting proper nouns off. This
+is important for languages like German, where all nouns start with an
+uppercase letter, not just proper nouns.
+
+Extracting keyphrases
+=====================
+
+To extract keyphrases for some documents, put them into an empty
+directory. Then rename them so that they end with the suffix ".txt".
+
+If you've previously built a keyphrase extraction model you can now
+apply keyphrases for these documents using:
+
+java KEAKeyphraseExtractor -l <name_of_directory> -m <name_of_model>
+
+This will create a ".key" file for each document in the
+directory. Each file will contain five extracted keyphrases for the
+corresponding document.
+
+If a ".key" file is already present it won't be overwritten.  Instead,
+the keyphrases present in that file will be used to evaluate the
+extraction model. The stemmed extracted phrases are compared to the
+stemmed versions of the phrases in the ".key"
+file. KEAKeyphraseExtractor reports the number of hits among the total
+number of extracted phrases for those documents that have associated
+".key" files in the directory.
+
+KEAKeyphraseExtractor has a few options. Here they are:
+
+-l <directory name>
+	Specifies name of directory.
+-m <model name>
+	Specifies name of model.
+-e <encoding>
+	Specifies encoding.
+-n
+	Specifies number of phrases to be output (default: 5).
+-d
+	Turns debugging mode on.
+-a
+	Also write stemmed phrase and score into ".key" file.
+
+Important comment
+-----------------
+
+To get good results, it is important that the input text for KEA is as
+"clean" as possible. That means html tags etc. in the input documents
+need to be deleted before the model is built and before keyphrases are
+extracted from new documents.
+
+----------------------------------------------------------------------
+
+3. Examples:
+------------
+
+The directory contains two example collections, each split up into a
+train and test directory. Note that these collections are only
+included to show how the system can be applied to actual documents.
+Due to the lack of data, the accuracy isn't very good on either
+example collection.
+
+Collection A
+------------
+
+A collection of abstracts taken from computer science technical
+reports:
+
+   CSTR_abstracts_train
+   CSTR_abstracts_test
+
+To build a model from the training data, try:
+
+   java KEAModelBuilder -l CSTR_abstracts_train -m CSTR_abstracts_model
+
+To evaluate that model on the test data, try:
+
+   java KEAKeyphraseExtractor -l CSTR_abstracts_test -m CSTR_abstracts_model
+
+Collection B
+------------
+
+A small collection of Chinese documents (in GBK encoding):
+
+   Journals_train
+   Journals_test
+
+To build a model from the training data, try:
+
+   java KEAModelBuilder -l Chinese_train -m Chinese_model -e GBK
+
+To evaluate that model on the test data, try:
+
+   java KEAKeyphraseExtractor -l Chinese_test -m Chinese_model -e GBK 
+
+----------------------------------------------------------------------
+
+4. Other documentation:
+-----------------------
+
+There are several papers on the KEA algorithm, listed below. Note that
+this implementation differs slightly from the version described in the
+papers, mainly in the pre-processing step (i.e. in the way candidate
+keyphrases are generated). For more info on the new method please
+consult the online documentation.
+
+Witten I.H., Paynter G.W., Frank E., Gutwin C. and Nevill-Manning
+C.G. (2000) "KEA: Practical automatic keyphrase extraction." Working
+Paper 00/5, Department of Computer Science, The University of Waikato.
+
+Witten I.H., Paynter G.W., Frank E., Gutwin C. and Nevill-Manning
+C.G. (1999) "KEA: Practical automatic keyphrase extraction." Proc. DL
+'99, pp. 254-256. (Poster presentation.)
+
+Frank E., Paynter G.W., Witten I.H., Gutwin C. and Nevill-Manning
+C.G. (1999) "Domain-specific keyphrase extraction" Proc. Sixteenth
+International Joint Conference on Artificial Intelligence, Morgan
+Kaufmann Publishers, San Francisco, CA, pp. 668-673.
+
+-----------------------------------------------------------------------
+
+5. Copyright:
+-------------
+
+KEA is distributed under the GNU public license. Please read the file
+COPYING.
+
+-----------------------------------------------------------------------
+

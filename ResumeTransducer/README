@@ -1,0 +1,38 @@
+ResumeTransducer
+
+This directory has been created by the GATE bootstrap wizard.
+The following files and directories have been created:
+
+ResumeTransducer/
+  |
+  +-- src/
+  |     put all your Java sources in here.
+  +-- resources/
+  |     any external files used by your plugin (e.g. configuration files,
+  |     JAPE grammars, gazetteer lists, etc.) go in here.
+  +-- build.xml
+  |     Ant build file for building your plugin.
+  +-- build.properties
+  |     property definitions that control the build process go in here,
+  |     in particular, make sure that gate.home points to your copy of GATE.
+  +-- creole.xml
+        plugin configuration file for GATE - edit this to add parameters, etc.,
+        for your resources.
+
+To build your plugin you can use Ant:
+
+ant jar
+
+This will compile the Java code and package the classes into a JAR file.  The
+build file also has a target to create JavaDoc documentation - "ant javadoc".
+If you run Ant without any arguments it will build everything in one pass.
+
+The build process creates additional files and directories:
+
+ResumeTransducer/
+  |
+  +-- classes/
+  |     compiled classes are placed in here.
+  +-- doc/
+  |    +-- javadoc/
+  +-- ResumeTransducer.jar

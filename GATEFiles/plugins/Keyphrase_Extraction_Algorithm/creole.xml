@@ -1,0 +1,79 @@
+<!-- Valentin Tablan, 3/7/2002 -->
+<!-- $Id: creole.xml 10304 2009-03-25 11:13:06Z ian_roberts $ -->
+
+<CREOLE>
+  <RESOURCE>
+    <JAR>lib/weka-3.4.6.jar</JAR>
+    <JAR>kea.jar</JAR>
+    <NAME>KEA Keyphrase Extractor</NAME>
+    <CLASS>gate.creole.kea.Kea</CLASS>
+    <COMMENT>A Keyphrase Extractor by Eibe Frank.</COMMENT>
+    <HELPURL>http://gate.ac.uk/userguide/sec:misc-creole:kea</HELPURL>
+    <PARAMETER NAME="document"
+      COMMENT="The document to be analysed"
+      RUNTIME="true">gate.Document</PARAMETER>
+
+    <PARAMETER NAME="inputAS"
+      COMMENT="The annotation set to be used for input"
+      OPTIONAL="true"
+      RUNTIME="true">java.lang.String</PARAMETER>
+
+    <PARAMETER NAME="outputAS"
+      COMMENT="The annotation set to be used for output"
+      OPTIONAL="true"
+      RUNTIME="true">java.lang.String</PARAMETER>
+
+    <PARAMETER NAME="keyphraseAnnotationType"
+      COMMENT="The type name of the annotations encoding key phrases"
+      DEFAULT="Keyphrase"
+      RUNTIME="true">java.lang.String</PARAMETER>
+      
+    <PARAMETER NAME="minPhraseLength"
+      COMMENT="The minimum length for key phrases"
+      DEFAULT="1"
+      RUNTIME="true">java.lang.Integer</PARAMETER>
+      
+    <PARAMETER NAME="maxPhraseLength"
+      COMMENT="The maximum length for key phrases"
+      DEFAULT="3"
+      RUNTIME="true">java.lang.Integer</PARAMETER>
+
+    <PARAMETER NAME="minNumOccur"
+      COMMENT="The minimum number of times a phrase needs to occur"
+      DEFAULT="2"
+      RUNTIME="true">java.lang.Integer</PARAMETER>
+      
+    <PARAMETER NAME="disallowInternalPeriods"
+      COMMENT="Should internal periods be disallowed"
+      DEFAULT="true"
+      RUNTIME="true">java.lang.Boolean</PARAMETER>
+
+    <PARAMETER NAME="useKFrequency"
+      COMMENT="Use keyphrase frequency statistic"
+      DEFAULT="true"
+      RUNTIME="true">java.lang.Boolean</PARAMETER>
+
+    <PARAMETER NAME="phrasesToExtract"
+      COMMENT="The number of phrases to be extracted in application mode"
+      DEFAULT="5"
+      RUNTIME="true">java.lang.Integer</PARAMETER>
+      
+    <PARAMETER NAME="trainingMode"
+      COMMENT="Set to true for training and false for application"
+      DEFAULT="true"
+      RUNTIME="true">java.lang.Boolean</PARAMETER>
+  </RESOURCE>
+  
+    <RESOURCE>
+      <JAR>lib/weka-3.4.6.jar</JAR>
+      <JAR>kea.jar</JAR>
+      <NAME>KEA Corpus Importer</NAME>
+      <COMMENT>Imports a KEA-style corpus into GATE</COMMENT>
+      <CLASS>gate.creole.kea.CorpusImporter</CLASS>
+      <!-- type values can be "large" or "small"-->
+      <GUI TYPE="large">
+        <RESOURCE_DISPLAYED>gate.creole.kea.Kea</RESOURCE_DISPLAYED>
+      </GUI>
+    </RESOURCE>
+  
+</CREOLE>

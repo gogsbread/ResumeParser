@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<metadata xmlns="http://gate.ac.uk/ns/pipeline-metadata">
+  <pipeline-name>ANNIE Named Entity Recognizer</pipeline-name>
+  <slug>annie-named-entity-recognizer</slug>
+  <ordering>10</ordering>
+  <annotation-selectors>:Address, :Date, :Location, :Organization, :Person</annotation-selectors>
+  <additional-annotations>:Money, :Percent, :Token, :SpaceToken, :Sentence</additional-annotations>
+  <tags>
+    <tag>English</tag>
+    <tag>Named Entity</tag>
+  </tags>
+</metadata>

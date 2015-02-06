@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- $Id: creole.xml 17841 2014-04-16 12:35:41Z markagreenwood $ -->
+<CREOLE-DIRECTORY>
+  <JAR>lib/lucene-core-3.5.0.jar</JAR>
+  <JAR SCAN="true">Information_Retrieval.jar</JAR>
+  <CREOLE>   
+   <!-- creole.xml for SearchPR -->
+    <RESOURCE>
+      <NAME>SearchPR</NAME>
+      <CLASS>gate.creole.ir.SearchPR</CLASS>
+      <COMMENT>Provides IR functionality.</COMMENT>
+      <HELPURL>http://gate.ac.uk/userguide/sec:misc-creole:ir</HELPURL>
+      <PARAMETER NAME="corpus" RUNTIME="true"
+        COMMENT="The indexed  corpus to be searched">
+        gate.creole.ir.IndexedCorpus</PARAMETER>
+      <PARAMETER NAME="query" RUNTIME="true" COMMENT="The search query">
+        java.lang.String</PARAMETER>
+      <PARAMETER NAME="limit" RUNTIME="true" DEFAULT="20"
+        COMMENT="The number of results returned">java.lang.Integer</PARAMETER>
+      <PARAMETER NAME="fieldNames" RUNTIME="true" DEFAULT="*"
+        COMMENT="The fields returned from result documents">
+        java.util.ArrayList</PARAMETER>
+      <PARAMETER NAME="searcherClassName" RUNTIME="true"
+        DEFAULT="gate.creole.ir.lucene.LuceneSearch"
+        COMMENT="The search implementation">java.lang.String</PARAMETER>
+      <ICON>binoculars.gif</ICON>
+    </RESOURCE>
+    <!-- Viewer -->
+    <RESOURCE>
+      <NAME>Search Results</NAME>
+      <CLASS>gate.gui.SearchPRViewer</CLASS>
+      <COMMENT>Viewer for IR search results</COMMENT>
+      <!-- type values can be "large" or "small"-->
+      <GUI TYPE="large">
+        <MAIN_VIEWER/>
+        <RESOURCE_DISPLAYED>gate.creole.ir.SearchPR</RESOURCE_DISPLAYED>
+      </GUI>
+    </RESOURCE>
+  </CREOLE>
+</CREOLE-DIRECTORY>

@@ -3,27 +3,26 @@ Input: Lookup Token Date SectionFinder
 Options: control = appelt debug = true
 
 MACRO: TOKEN_FILLER
-(({Token})[0,4])
+(({Token})[0,10])
 
 MACRO: DATE_RULE
-({Date.rule==DateName} | {Date.rule==DateNumSlashDot} | {Date.rule==DateNumSlashDot})
+({Date.rule==DateName} | {Date.rule==DateNumSlashDot} | {Date.rule==DateNumSlashDot} | {Date.rule==DateSlash} | {Date.rule==DateNameSpan1} | {Date.rule==DateNameSpan2} | {Date.rule==DateNumDash} 
+ {Date.rule==DateNameRev} | {Date.rule==DateNumDashRev})
 
 MACRO:WORKEX_RULE
 (
-(({Lookup.majorType==jobtitle})TOKEN_FILLER({Lookup.majorType==organization})?TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?)|
-({Lookup.majorType==jobtitle}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==organization})?)|
-(({Lookup.majorType==organization})TOKEN_FILLER({Lookup.majorType==jobtitle})?TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?) |
-({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
-({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
-((DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==organization})?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
-((DATE_RULE)({Token.string=="-"})?(DATE_RULE)?(TOKEN_FILLER{Lookup.majorType==jobtitle})?(TOKEN_FILLER{Lookup.majorType==organization})?)
+(({Lookup.majorType==jobtitle})(TOKEN_FILLER({Lookup.majorType==organization}))?TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?)|
+({Lookup.majorType==jobtitle}TOKEN_FILLER(DATE_RULE)(((({Token.kind==punctuation})|({Token.category==CC})))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})?)|
+(({Lookup.majorType==organization})(TOKEN_FILLER{Lookup.majorType==jobtitle})?TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?) |
+({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?(TOKEN_FILLER{Lookup.majorType==organization})?)
 )
 
 Rule: WorkExperienceRule
 (
- ({SectionFinder.minorType==work_experience})?
- (WORKEX_RULE)
- {!SectionFinder}
+ WORKEX_RULE
  //!(WORKEX_RULE) //| ({!SectionFinder}))
  //{!SectionFinder}
 ):workex
