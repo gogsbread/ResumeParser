@@ -81,6 +81,29 @@ Open powershell in windows (run->powershell) <br />
   	  {"<section_title_from_resume>":"text"}
   	],
   	}
-  
+  	
+###Pros###
+a) Very powerful semantic parsing of resumes. I did not syntactically parse based on common styles or appearances of sections because these approaches do not scale.</br>
+b) Relies on proven grammar engines (GATE) and open source projects.<br/>
+		
+####Everything is not perfect#### 
+I tried my best to not blow in the face of user, but these are some gotchas:<br/>
+	1) The file should have an extension in one of the supported format. I simply use the extension to determine the parser and unknown formats will be returned with error. I did not have time for MIME-type evaluation.<br/>
+	2) The engine has a one-time initilization cost and technically I should be faster for subsequent files, however, I did not expose the capability to process corpus data, so it will incur the same cost for every run. <br/>
+	3) There is a log4j warning at the start. Did not have time to fix that :)<br/>
+	4) Page numbers are part of PDF files. Hence you would see page 1, page 2, page n every now and then. This will improve as Apache Tikka improves.<br/>
+	5) Some grammar parsing especially in identifying adjectives is not on par. I did not have time to try out other NL parsers such as Stanford NLP but this is just a matter of improvement of the fundamental engine overtime.<br/>
+
+###SourceCode structure:###
+\ResumeParser<br/>
+	\ANNIEGazetterFiles<br/>
+		Contains all the compiled lists for common resume section titles<br/>
+	\GATEFiles<br/>
+		Contains all the GATE libraries needed for NL processing<br/>
+	\JAPEGrammars<br/>
+		Contains all the JAPE grammars for resume parsing.<br/>
+	\ResumeTransducer<br/>
+		Console application written in JAVA	<br/>
+		
 ###How does the parse work?###
 
