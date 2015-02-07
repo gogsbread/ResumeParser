@@ -68,9 +68,19 @@ Open powershell in windows (run->powershell) <br />
   	"accomplishments":[
   		{"<section_title_from_resume>":"text"}
   	],
-  	misc" : [
+  	"awards" : [
   	  {"<section_title_from_resume>":"text"}
-  	]}
+  	],
+  	"credibility" : [
+  	  {"<section_title_from_resume>":"text"}
+  	],
+  	"extracurricular" : [
+  	  {"<section_title_from_resume>":"text"}
+  	],
+  	"misc" : [
+  	  {"<section_title_from_resume>":"text"}
+  	],
+  	}
   
 ###How does the parse work?###
 
