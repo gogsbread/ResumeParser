@@ -267,12 +267,12 @@
                   <null/>
                 </entry>
                 <entry>
-                  <string>posTagAllTokens</string>
-                  <boolean>true</boolean>
-                </entry>
-                <entry>
                   <string>baseTokenAnnotationType</string>
                   <string>Token</string>
+                </entry>
+                <entry>
+                  <string>posTagAllTokens</string>
+                  <boolean>true</boolean>
                 </entry>
                 <entry>
                   <string>baseSentenceAnnotationType</string>
