@@ -26,7 +26,7 @@ Open powershell in windows (run->powershell) <br />
 	Syntax:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
 	
-	> java -cp '.\bin\\\*;..\GATEFiles\lib\\\*;..\GATEFILES\bin\gate.jar;.\lib\\\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
+	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
 
 ###Parser Capabilities:###
 
