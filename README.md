@@ -15,14 +15,14 @@ git<br/>
 Latest Java (jre8 tested)<br/>
 
 
-###Installation:###<br />
+###Installation:###
 Open powershell in windows (run->powershell) <br />
 1) Git clone https://github.com/antonydeepak/ResumeParser.git <br />
 2) cd ResumeParser <br />
 3) cd ResumeTransducer <br />
 4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)<br />
 
-###Run\Test:###<br />
+###Run\Test:###
 	Run syntax:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
 	
@@ -70,8 +70,7 @@ Open powershell in windows (run->powershell) <br />
   	],
   	misc" : [
   	  {"<section_title_from_resume>":"text"}
-  	],
-  }
+  	]}
   
-###How does the parse work?###<br/>
+###How does the parse work?###
 
