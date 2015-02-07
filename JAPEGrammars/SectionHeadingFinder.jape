@@ -1,0 +1,40 @@
+Phase: SectionHeadingFinder
+Input: Lookup Token Sentence
+Options: control = all debug = false
+MACRO: SECTION_IDENTIFIER
+//(({Token.category==JJ} | {Token.category==JJR} | {Token.category==JJS})*({Lookup.majorType == resume,Token.orth==upperInitial}|{Lookup.majorType == resume,Token.orth==allCaps}))
+//'JJ' and variants are all adjectives.
+((({Token.category==JJ,Token.orth==upperInitial} | {Token.category==JJR,Token.orth==upperInitial} | {Token.category==JJS,Token.orth==upperInitial})?({Lookup.majorType == resume})) |
+(({Token.category==JJ,Token.orth==allCaps} | {Token.category==JJR,Token.orth==allCaps} | {Token.category==JJS,Token.orth==allCaps})?({Lookup.majorType == resume})))
+
+Rule: SectionHeadingrule
+(
+ //(SECTION_IDENTIFIER({Token.kind==punctuation}|{Token.category==CC})?(SECTION_IDENTIFIER)?) //CC - coordinating conjunction 'and','or' etc..
+ //CC - coordinating conjunction 'and','or' etc..
+ ((({Token.category==NN,Token.orth==allCaps} | {Token.category==NNP,Token.orth==allCaps} | {Token.category==NP,Token.orth==allCaps} |{Token.category==NNS,Token.orth==allCaps} )({Token.kind==punctuation}|{Token.category==CC})?)?SECTION_IDENTIFIER)|
+ ((({Token.category==NN,Token.orth==upperInitial} | {Token.category==NNP,Token.orth==upperInitial} | {Token.category==NP,Token.orth==upperInitial} |{Token.category==NNS,Token.orth==upperInitial})({Token.kind==punctuation}|{Token.category==CC})?)?SECTION_IDENTIFIER) 
+)
+:section
+-->
+{
+
+	AnnotationSet sections = bindings.get("section");
+	AnnotationSet sentences = inputAS.get("Sentence");
+	for(Annotation sentence : sentences){
+		/*try{
+		//System.out.println(doc.getContent().getContent(sections.firstNode().getOffset(),sections.lastNode().getOffset()).toString());
+		}catch(InvalidOffsetException e){}*/
+		if(sections != null && sections.size() > 0 && sentence.getStartNode().getOffset() == sections.firstNode().getOffset()){ //start of the sentence
+			/*for(Annotation section : sections){
+				System.out.println("section"+section.type);
+			}*/
+				//System.out.println("size:"+sections.get("Lookup").size());
+				AnnotationSet annSet = sections.get("Lookup");
+				FeatureMap features = Factory.newFeatureMap();
+				for(Annotation ann : annSet){
+					features.putAll(ann.getFeatures());
+				}
+				outputAS.add(sections.firstNode(),sections.lastNode(),"SectionHeadingFinder",features);
+		}
+	}
+}
