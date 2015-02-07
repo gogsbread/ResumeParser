@@ -23,18 +23,21 @@ Open powershell in windows (run->powershell) <br />
 4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)<br />
 
 ###Run\Test:###<br />
-	Syntax:
+	Run syntax:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
 	
+	Test:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
 
 ###Parser Capabilities:###
 
-  *Supported formats*: PDF, doc, docx, rtf, html, txt
-	*Supported Resume Language*: English
+  *Supported formats*: PDF, doc, docx, rtf, html, txt<br />
+   *Supported Resume Language*: English<br />
 
-	*Output JSON format*:
-  {
+   *Output JSON format*:
+  
+	>	
+	{
   	"title":""
   	"gender":"",
   	"name":{
