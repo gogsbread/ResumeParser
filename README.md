@@ -22,7 +22,7 @@ Open powershell in windows (run->powershell) <br />
 3) cd ResumeTransducer <br />
 4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)<br />
 
-**Run\Test:**
+**Run\Test:**<br />
 java -cp '.\bin*;..\GATEFiles\lib*;..\GATEFILES\bin\gate.jar;.\lib*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
 
 How does the parse work?
