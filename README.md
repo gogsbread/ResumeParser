@@ -16,14 +16,14 @@ Latest Java (jre8 tested)
 
 
 **Installation:**
-Git clone https://github.com/antonydeepak/ResumeParser.git
-Cd ResumeParser
-Cd ResumeTransducer
-$env:GATE_HOME="..\GATEFiles"
-java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepak_linkedin.pdf antony_linkedin.json
+Open powershell in windows (run->powershell)
+1) Git clone https://github.com/antonydeepak/ResumeParser.git
+2) cd ResumeParser
+3) cd ResumeTransducer
+4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)
 
-Testing:
-
+Run\Test:
+java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
 
 How does the parse work?
 
