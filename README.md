@@ -86,7 +86,7 @@ Open powershell in windows (run->powershell) <br />
 a) Very powerful semantic parsing of resumes. I did not syntactically parse based on common styles or appearances of sections because these approaches do not scale.</br>
 b) Relies on proven grammar engines (GATE) and open source projects.<br/>
 		
-####Everything is not perfect#### 
+###Everything is not perfect###
 I tried my best to not blow in the face of user, but these are some gotchas:<br/>
 	1) The file should have an extension in one of the supported format. I simply use the extension to determine the parser and unknown formats will be returned with error. I did not have time for MIME-type evaluation.<br/>
 	2) The engine has a one-time initilization cost and technically I should be faster for subsequent files, however, I did not expose the capability to process corpus data, so it will incur the same cost for every run. <br/>
@@ -96,7 +96,7 @@ I tried my best to not blow in the face of user, but these are some gotchas:<br/
 
 ###SourceCode structure:###
 \ResumeParser<br/>
-	- \ANNIEGazetterFiles<br/>
+	-\ANNIEGazetterFiles<br/>
 		Contains all the compiled lists for common resume section titles<br/>
 	-\GATEFiles<br/>
 		Contains all the GATE libraries needed for NL processing<br/>
