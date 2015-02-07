@@ -15,12 +15,12 @@ git
 Latest Java (jre8 tested)
 
 
-**Installation:**
-Open powershell in windows (run->powershell) 
-1) Git clone https://github.com/antonydeepak/ResumeParser.git 
-2) cd ResumeParser 
-3) cd ResumeTransducer 
-4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)
+**Installation:**<br />
+Open powershell in windows (run->powershell) <br />
+1) Git clone https://github.com/antonydeepak/ResumeParser.git <br />
+2) cd ResumeParser <br />
+3) cd ResumeTransducer <br />
+4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)<br />
 
 **Run\Test:**
 java -cp '.\bin*;..\GATEFiles\lib*;..\GATEFILES\bin\gate.jar;.\lib*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
