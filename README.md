@@ -20,7 +20,7 @@ Open powershell in windows (run->powershell) <br />
 1) Git clone https://github.com/antonydeepak/ResumeParser.git <br />
 2) cd ResumeParser <br />
 3) cd ResumeTransducer <br />
-4) $env:GATE_HOME="..\GATEFiles" (beware: you are giving a relative path for ease.)<br />
+4) $env:GATE_HOME="..\GATEFiles"  *(beware: you are giving a relative path for ease.)*<br />
 
 ###Run\Test:###
 	Run syntax:
@@ -96,13 +96,13 @@ I tried my best to not blow in the face of user, but these are some gotchas:<br/
 
 ###SourceCode structure:###
 \ResumeParser<br/>
-	\ANNIEGazetterFiles<br/>
+	- \ANNIEGazetterFiles<br/>
 		Contains all the compiled lists for common resume section titles<br/>
-	\GATEFiles<br/>
+	-\GATEFiles<br/>
 		Contains all the GATE libraries needed for NL processing<br/>
-	\JAPEGrammars<br/>
+	-\JAPEGrammars<br/>
 		Contains all the JAPE grammars for resume parsing.<br/>
-	\ResumeTransducer<br/>
+	-\ResumeTransducer<br/>
 		Console application written in JAVA	<br/>
 		
 ###How does the parse work?###
