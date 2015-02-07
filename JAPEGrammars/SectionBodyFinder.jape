@@ -1,0 +1,59 @@
+Imports: {
+import static gate.Utils.*;
+}
+
+Phase: SectionBodyFinder
+Input: Lookup Token Sentence SectionHeadingFinder WorkExperienceFinder
+Options: control = appelt debug = false
+
+Rule: SectionBodyrule
+(
+ {SectionHeadingFinder}|{WorkExperienceFinder}
+ )
+:sectionOrExp
+ -->
+{
+	AnnotationSet section = bindings.get("sectionOrExp");
+	Annotation curAnn = section.iterator().next();
+	if(curAnn.getType() == "SectionHeadingFinder"){
+		if(doc.getFeatures().containsKey("currentSectionType")){//there is an active section
+			Node endOffsetNode = (Node)doc.getFeatures().get("currentSectionEndNode");
+			String currentSectionType = doc.getFeatures().get("currentSectionType").toString();
+			FeatureMap currentSectionFeatures = (FeatureMap)doc.getFeatures().get("currentSectionFeatures");
+
+			outputAS.add(endOffsetNode,curAnn.getStartNode(),currentSectionType,currentSectionFeatures);
+		}
+		doc.getFeatures().put("currentSectionEndNode",curAnn.getEndNode());
+		doc.getFeatures().put("currentSectionType",curAnn.getFeatures().get("minorType"));
+		FeatureMap features = Factory.newFeatureMap();
+		features.putAll(curAnn.getFeatures());
+		features.put("sectionHeading",stringFor(doc,curAnn));
+		doc.getFeatures().put("currentSectionFeatures",features);
+	}	
+	else if(curAnn.getType() == "WorkExperienceFinder"){
+		if(doc.getFeatures().containsKey("currentSectionType")){//there is an active section
+			Node endOffsetNode = (Node)doc.getFeatures().get("currentSectionEndNode");
+			String currentSectionType = doc.getFeatures().get("currentSectionType").toString();
+			FeatureMap currentSectionFeatures = (FeatureMap)doc.getFeatures().get("currentSectionFeatures");
+
+			outputAS.add(endOffsetNode,curAnn.getStartNode(),currentSectionType,currentSectionFeatures);
+		}
+		doc.getFeatures().put("currentSectionEndNode",curAnn.getEndNode());
+		doc.getFeatures().put("currentSectionType","work_experience");
+		FeatureMap features = Factory.newFeatureMap();
+		features.putAll(curAnn.getFeatures());
+		features.put("sectionHeading","work_experience_marker");
+		doc.getFeatures().put("currentSectionFeatures",features);
+	}
+
+	//last node to end of document
+	long lastAnnOffset = Long.parseLong(doc.getFeatures().get("lastSectionWorkExOffSet").toString(),10);
+	if(section.firstNode().getOffset() == lastAnnOffset){
+		String currentSectionType = doc.getFeatures().get("currentSectionType").toString();
+		FeatureMap currentSectionFeatures = (FeatureMap)doc.getFeatures().get("currentSectionFeatures");
+		try{
+			outputAS.add(section.lastNode().getOffset(),doc.getContent().size()-1,currentSectionType,currentSectionFeatures);
+		}catch(InvalidOffsetException e){
+		}
+	}
+}

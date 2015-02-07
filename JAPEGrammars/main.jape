@@ -12,6 +12,8 @@ PhoneFinder
 AddressFinder
 URLFinder
 TitleFinder
-SectionFinder
+SectionHeadingFinder
 WorkExperienceFinder
+SectionBodyFinderPre
+SectionBodyFinder
 
