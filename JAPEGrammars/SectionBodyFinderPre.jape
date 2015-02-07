@@ -1,0 +1,14 @@
+Phase: SectionBodyFinderPre
+Input: SectionHeadingFinder WorkExperienceFinder
+Options: control = appelt debug = false
+
+Rule: SectionBodyPreRule
+(
+ {SectionHeadingFinder}|{WorkExperienceFinder}
+ )
+:sectionOrExpPre
+ -->
+{
+	long offset = bindings.get("sectionOrExpPre").firstNode().getOffset();
+	doc.getFeatures().put("lastSectionWorkExOffSet",offset);
+}
