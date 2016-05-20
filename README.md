@@ -28,7 +28,7 @@ Open powershell in windows (run->powershell)
 ### Run/Test
 	Run syntax:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
-	
+
 	Test:
 	> java -cp '.\bin\*;..\GATEFiles\lib\*;..\GATEFILES\bin\gate.jar;.\lib\*' code4goal.antony.resumeparser.ResumeParserProgram .\UnitTests\AntonyDeepakThomas.pdf antony_thomas.json
 
@@ -43,7 +43,7 @@ Open terminal
 
 ### Run
 ```bash
-java -cp 'bin/*:../GATEFiles/lib/*:../GATEFILES/bin/gate.jar:lib/*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
+java -cp 'bin/*:../GATEFiles/lib/*:../GATEFiles/bin/gate.jar:lib/*' code4goal.antony.resumeparser.ResumeParserProgram <input_file> [output_file]
 ```
 
 ## Parser Capabilities
@@ -122,11 +122,11 @@ java -cp 'bin/*:../GATEFiles/lib/*:../GATEFILES/bin/gate.jar:lib/*' code4goal.an
    ]
 }
 ```
-  	
+
 ## Pros
 1. Very powerful semantic parsing of resumes. I did not syntactically parse based on common styles or appearances of sections because these approaches do not scale.
 2. Relies on proven grammar engines (GATE) and open source projects.
-		
+
 ## Everything is not perfect
 I tried my best to not blow in the face of user, but these are some gotchas:
 
