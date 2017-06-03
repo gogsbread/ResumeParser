@@ -1,5 +1,5 @@
 # ResumeParser
-Parser that extracts information from any resume and converts into a structured .json format to be used by internal systems. The parser uses a hybrid **machine-learning** and **rule-based** approach that focuses on semantic rather than syntactic parsing. The parser can handle document types in .pdf, .txt, .doc and .docx (Microsoft word). In its current form, this application is a console based application.
+Parser that extracts information from any resume and converts into a structured .json format to be used by internal systems. The parser uses a **rule-based** approach that focuses on semantic rather than syntactic parsing. The parser can handle document types in .pdf, .txt, .doc and .docx (Microsoft word). In its current form, this application is a console based application.
 
 ## System
 * Windows 8.1 (tested). Should also run in Windows 7 & 10)
