@@ -8,18 +8,18 @@ Rule: TitleRule
 ):titleLookup
 -->
 {
-	AnnotationSet titleSet = bindings.get("titleLookup");
-	AnnotationSet profileSection = inputAS.get("ProfileSection");
+    AnnotationSet titleSet = bindings.get("titleLookup");
+    AnnotationSet profileSection = inputAS.get("ProfileSection");
 
-	if(titleSet != null && titleSet.size() > 0){
-		//Try to find the title within the most probable location (first 10 lines of the document; a.k.a within the first page)
-		AnnotationSet titles = titleSet.getContained(profileSection.firstNode().getOffset(),profileSection.lastNode().getOffset());
-		if(titles != null && titles.size() > 0){
-			Annotation title = titles.iterator().next();
-			FeatureMap features = title.getFeatures();
-			features.put("rule","TitleRule");
-			features.put("kind","title");
-			outputAS.add(title.getStartNode(),title.getEndNode(),"TitleFinder",features);
-		}
-	}
+    if(titleSet != null && titleSet.size() > 0){
+        //Try to find the title within the most probable location (first 10 lines of the document; a.k.a within the first page)
+        AnnotationSet titles = titleSet.getContained(profileSection.firstNode().getOffset(),profileSection.lastNode().getOffset());
+        if(titles != null && titles.size() > 0){
+            Annotation title = titles.iterator().next();
+            FeatureMap features = title.getFeatures();
+            features.put("rule","TitleRule");
+            features.put("kind","title");
+            outputAS.add(title.getStartNode(),title.getEndNode(),"TitleFinder",features);
+        }
+    }
 }

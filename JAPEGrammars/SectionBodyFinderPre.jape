@@ -9,6 +9,6 @@ Rule: SectionBodyPreRule
 :sectionOrExpPre
  -->
 {
-	long offset = bindings.get("sectionOrExpPre").firstNode().getOffset();
-	doc.getFeatures().put("lastSectionWorkExOffSet",offset);
+    long offset = bindings.get("sectionOrExpPre").firstNode().getOffset();
+    doc.getFeatures().put("lastSectionWorkExOffSet",offset);
 }

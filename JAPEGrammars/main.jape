@@ -4,7 +4,7 @@
 */
 
 MultiPhase: ResumeParser
-Phases: 
+Phases:
 ProfileSection
 NameFinder
 EmailFinder
