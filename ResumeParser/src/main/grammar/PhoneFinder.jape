@@ -1,0 +1,24 @@
+Phase: PhoneFinder
+Input: Address
+Options: control = appelt debug = false
+Rule: PhoneRule
+(
+ {Address.kind == phone,Address.ruleFinal == PhoneFinal}
+)
+:phoneLookup
+-->
+{
+    AnnotationSet addressSet = bindings.get("phoneLookup");
+    AnnotationSet profileSection = inputAS.get("ProfileSection");
+
+    if(addressSet != null && addressSet.size() > 0){
+        //Try to find the address within the most probable location (first 10 lines of the document; a.k.a within the first page)
+        AnnotationSet addresses = addressSet.getContained(profileSection.firstNode().getOffset(),profileSection.lastNode().getOffset());
+        if(addresses != null && addresses.size() > 0 && addressSet.lastNode().getOffset() <= profileSection.lastNode().getOffset()){
+                FeatureMap features = Factory.newFeatureMap();
+                features.put("rule","PhoneRule");
+                features.put("kind","phone");
+                outputAS.add(addresses.firstNode(),addresses.lastNode(),"PhoneFinder",features);
+        }
+    }
+}

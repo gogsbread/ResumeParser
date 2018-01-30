@@ -1,0 +1,56 @@
+Imports: {
+import static gate.Utils.*;
+}
+Phase: WorkExperienceFinder 
+Input: Lookup Token Date SectionFinder
+Options: control = appelt debug = true
+
+    MACRO: TOKEN_FILLER
+(({Token})[0,7])
+
+    MACRO: DATE_RULE
+    ({Date.rule==DateName} | {Date.rule==DateNumSlashDot} | {Date.rule==DateNumSlashDot} | {Date.rule==DateSlash} | {Date.rule==DateNameSpan1} | {Date.rule==DateNameSpan2} | {Date.rule==DateNumDash} 
+     {Date.rule==DateNameRev} | {Date.rule==DateNumDashRev} | {Date.rule==TempYear2} | {Date.rule==YearSpan3} | {Date.rule==YearSpan2})
+
+MACRO:WORKEX_RULE
+(
+ (({Lookup.majorType==jobtitle})(TOKEN_FILLER({Lookup.majorType==organization}))?TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?)|
+ ({Lookup.majorType==jobtitle}TOKEN_FILLER(DATE_RULE)(((({Token.kind==punctuation})|({Token.category==CC})))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})?)|
+ (({Lookup.majorType==organization})(TOKEN_FILLER{Lookup.majorType==jobtitle})?TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?) |
+ ({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+ ({Lookup.majorType==organization}TOKEN_FILLER(DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+ /*((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})?(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+   ((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?(TOKEN_FILLER{Lookup.majorType==organization})?)*/
+ ((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})(TOKEN_FILLER{Lookup.majorType==jobtitle})?)|
+ ((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==organization})?(TOKEN_FILLER{Lookup.majorType==jobtitle}))|
+ ((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})(TOKEN_FILLER{Lookup.majorType==organization})?)|
+ ((DATE_RULE)((({Token.kind==punctuation})|({Token.category==CC}))(DATE_RULE))?(TOKEN_FILLER{Lookup.majorType==jobtitle})?(TOKEN_FILLER{Lookup.majorType==organization}))
+ )
+
+    Rule: WorkExperienceRule
+    (
+     (WORKEX_RULE)
+    ):workex
+      -->
+      //:workex.WorkExperienceFinder={}
+{
+    AnnotationSet workexSet = bindings.get("workex");
+    FeatureMap features = Factory.newFeatureMap();
+    boolean dateDone = false;
+    for(Annotation ann : workexSet.inDocumentOrder()){
+        if(ann.getType() == "Lookup"){
+            features.put(ann.getFeatures().get("majorType"),stringFor(doc,ann));//org or jobtitle
+        }else if(ann.getType() == "Date"){
+            String datePeriod = "";
+            if(!dateDone){
+                dateDone = true;
+                datePeriod = "date_start";
+            }
+            else{
+                datePeriod = "date_end";
+            }
+            features.put(datePeriod,stringFor(doc,ann));//org or jobtitle
+        }
+    }
+    outputAS.add(workexSet.firstNode(),workexSet.lastNode(),"WorkExperienceFinder",features);
+}

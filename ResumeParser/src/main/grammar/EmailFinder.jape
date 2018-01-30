@@ -1,0 +1,24 @@
+Phase: EmailFinder
+Input: Address
+Options: control = appelt debug = false
+Rule: EmailRule
+(
+ {Address.kind == email,Address.ruleFinal == EmailFinal}
+)
+:emailLookup
+-->
+{
+    AnnotationSet addressSet = bindings.get("emailLookup");
+    AnnotationSet profileSection = inputAS.get("ProfileSection");
+
+    if(addressSet != null && addressSet.size() > 0){
+        //Try to find the address within the most probable location (first 10 lines of the document; a.k.a within the first page)
+        AnnotationSet addresses = addressSet.getContained(profileSection.firstNode().getOffset(),profileSection.lastNode().getOffset());
+        if(addresses != null && addresses.size() > 0 && addressSet.lastNode().getOffset() <= profileSection.lastNode().getOffset()){
+                FeatureMap features = Factory.newFeatureMap();
+                features.put("rule","EmailRule");
+                features.put("kind","email");
+                outputAS.add(addresses.firstNode(),addresses.lastNode(),"EmailFinder",features);
+        }
+    }
+}
