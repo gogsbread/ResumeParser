@@ -29,7 +29,7 @@ date_unit.lst:date_unit
 day.lst:date:day
 day_cap.lst:date:day
 department.lst:organization:government
-education_and_training.lst:resume:education_and_training
+education_items.lst:resume:education_items
 extracurricular.lst:resume:extracurricular
 facility.lst:facility:building
 facility_key.lst:facility_key

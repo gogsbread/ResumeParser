@@ -1,51 +1,41 @@
 package code4goal.antony.resumeparser;
 
-import gate.Annotation;
-import gate.AnnotationSet;
-import gate.Corpus;
-import gate.FeatureMap;
-import gate.Gate;
-import gate.Document;
+import gate.*;
 import gate.util.GateException;
 import gate.util.Out;
-import gate.Factory;
-import gate.creole.SerialAnalyserController;
-import static gate.Utils.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.detect.Detector;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.ToXMLContentHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 
-import com.google.gson.JsonObject;
+import java.io.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import static gate.Utils.stringFor;
 
 public class ResumeParserProgram {
+
+    private static final HashMap<String, String> WORK_EXPERIENCES = createMap();
+    private static HashMap<String, String> createMap()
+    {
+        HashMap<String,String> myMap = new HashMap<>();
+        myMap.put("organization", "company");
+        myMap.put("date_start", "start");
+        myMap.put("date_end", "end");
+        myMap.put("text", "description");
+        myMap.put("jobtitle", "title");
+        myMap.put("c", "d");
+        return myMap;
+    }
+
 	private static File parseToHTMLUsingApacheTikka(String file)
 			throws IOException, SAXException, TikaException {
 		// determine extension
@@ -86,9 +76,9 @@ public class ResumeParserProgram {
 
 	public static JSONObject loadGateAndAnnie(File file) throws GateException,
 			IOException {
-		Out.prln("Initialising basic system...");
-		Gate.init();
-		Out.prln("...basic system initialised");
+//		Out.prln("Initialising basic system...");
+//		Gate.init();
+//		Out.prln("...basic system initialised");
 
 		// initialise ANNIE (this may take several minutes)
 		Annie annie = new Annie();
@@ -147,6 +137,10 @@ public class ResumeParserProgram {
 					}
 				}
 				profileJSON.put("name", nameJson);
+				String firstName = nameJson.get("firstName") == null ? "" : nameJson.get("firstName").toString()+" ";
+				String middleName = nameJson.get("middleName") == null ? "" : nameJson.get("middleName").toString()+" ";
+				String surname = nameJson.get("surname") == null ? "" : nameJson.get("surname").toString();
+				profileJSON.put("cand_name",(firstName + middleName + surname).trim());
 			} // name
 
 			// title
@@ -175,7 +169,7 @@ public class ResumeParserProgram {
 					currAnnot = (Annotation) it.next();
 					String s = stringFor(doc, currAnnot);
 					if (s != null && s.length() > 0) {
-						sectionArray.add(s);
+						sectionArray.add(s.trim());
 					}
 				}
 				if (sectionArray.size() > 0) {
@@ -184,11 +178,14 @@ public class ResumeParserProgram {
 			}
 			if (!profileJSON.isEmpty()) {
 				parsedJSON.put("basics", profileJSON);
+				parsedJSON.put("email", profileJSON.get("email"));
+				parsedJSON.put("phone", profileJSON.get("phone"));
+				parsedJSON.put("cand_name", profileJSON.get("cand_name"));
 			}
 
-			// awards,credibility,education_and_training,extracurricular,misc,skills,summary
+			// awards,credibility,education_items,extracurricular,misc,skills,summary
 			String[] otherSections = new String[] { "summary",
-					"education_and_training", "skills", "accomplishments",
+					"education_items", "skills", "accomplishments",
 					"awards", "credibility", "extracurricular", "misc" };
 			for (String otherSection : otherSections) {
 				curAnnSet = defaultAnnotSet.get(otherSection);
@@ -202,7 +199,7 @@ public class ResumeParserProgram {
 					String value = stringFor(doc, currAnnot);
 					if (!StringUtils.isBlank(key)
 							&& !StringUtils.isBlank(value)) {
-						subSection.put(key, value);
+						subSection.put(key, value.trim());
 					}
 					if (!subSection.isEmpty()) {
 						subSections.add(subSection);
@@ -210,6 +207,9 @@ public class ResumeParserProgram {
 				}
 				if (!subSections.isEmpty()) {
 					parsedJSON.put(otherSection, subSections);
+					if("summary".equalsIgnoreCase(otherSection)){
+						parsedJSON.put("objective", ((JSONObject)subSections.get(0)).get("SUMMARY"));
+					}
 				}
 			}
 
@@ -231,7 +231,10 @@ public class ResumeParserProgram {
 								annotation);
 						if (!StringUtils.isBlank(v)) {
 							// details.put(annotation, v);
-							workExperience.put(annotation, v);
+                            if("annotation".equalsIgnoreCase(annotation)){
+                                annotation = "company";
+                            }
+							workExperience.put(WORK_EXPERIENCES.get(annotation), v.trim());
 						}
 					}
 					// if (!details.isEmpty()) {
@@ -242,7 +245,7 @@ public class ResumeParserProgram {
 				}
 				String value = stringFor(doc, currAnnot);
 				if (!StringUtils.isBlank(key) && !StringUtils.isBlank(value)) {
-					workExperience.put(key, value);
+					workExperience.put(WORK_EXPERIENCES.get(key), value.trim());
 				}
 				if (!workExperience.isEmpty()) {
 					workExperiences.add(workExperience);
@@ -250,11 +253,14 @@ public class ResumeParserProgram {
 
 			}
 			if (!workExperiences.isEmpty()) {
-				parsedJSON.put("work_experience", workExperiences);
+				parsedJSON.put("work_items", workExperiences);
 			}
 
 		}// if
 		Out.prln("Completed parsing...");
+        corpus.clear();
+        corpus.cleanup();
+        annie = null;
 		return parsedJSON;
 	}
 
@@ -264,10 +270,32 @@ public class ResumeParserProgram {
 					.println("USAGE: java ResumeParser <inputfile> <outputfile>");
 			return;
 		}
-		String inputFileName = args[0];
-		String outputFileName = (args.length == 2) ? args[1]
-				: "parsed_resume.json";
+		String inputFileDir = args[0];
+		String outputFileDir = (args.length == 2) ? args[1]
+				: "output";
+		File inputDir = new File(inputFileDir);
+		File outDir = new File(outputFileDir);
+		if(!inputDir.exists()){
+			System.err
+					.println("Can not find input file dir: " + inputFileDir);
+			return;
+		}
+		if(!outDir.exists()){
+			outDir.mkdirs();
+		}
+        Out.prln("Initialising basic system...");
+        try {
+            Gate.init();
+        } catch (GateException e) {
+            e.printStackTrace();
+        }
+        Out.prln("...basic system initialised");
+		for (File file : inputDir.listFiles()){
+            parseResume(file.getAbsolutePath(), outDir.getAbsolutePath()+ "/" +file.getName()+".json");
+        }
+	}
 
+	private static void parseResume(String inputFileName, String outputFileName){
 		try {
 			File tikkaConvertedFile = parseToHTMLUsingApacheTikka(inputFileName);
 			if (tikkaConvertedFile != null) {
@@ -280,7 +308,6 @@ public class ResumeParserProgram {
 				jsonFileWriter.close();
 				Out.prln("Output written to file " + outputFileName);
 			}
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Sad Face :( .Something went wrong.");
