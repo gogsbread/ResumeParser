@@ -98,8 +98,8 @@
            debug="true"
            debuglevel="lines,source"
     	   encoding="UTF-8"
-           source="1.6"
-           target="1.6">
+           source="1.8"
+           target="1.8">
     	<compilerarg value="-Xmaxwarns" />
     	<compilerarg value="${gate.compile.maxwarnings}" />
     	<compilerarg value="-Xlint:all" />

@@ -10,7 +10,7 @@ Options: control = appelt debug = true
 
 	MACRO: DATE_RULE
 	({Date.rule==DateName} | {Date.rule==DateNumSlashDot} | {Date.rule==DateNumSlashDot} | {Date.rule==DateSlash} | {Date.rule==DateNameSpan1} | {Date.rule==DateNameSpan2} | {Date.rule==DateNumDash} 
-	 {Date.rule==DateNameRev} | {Date.rule==DateNumDashRev} | {Date.rule==TempYear2} | {Date.rule==YearSpan3} | {Date.rule==YearSpan2})
+	 {Date.rule==DateNameRev} | {Date.rule==DateNumDashRev} | {Date.rule==TempYear2} | {Date.rule==YearSpan3} | {Date.rule==YearSpan2} | {Date.rule==Present})
 
 MACRO:WORKEX_RULE
 (

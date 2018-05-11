@@ -97,6 +97,11 @@ Macro: YEAR
  (TWO_DIGIT)
 )
 
+Macro: Present
+(
+  {Token.string == "Present" }
+)
+
 
 Macro:	XDAY
 (
@@ -528,6 +533,28 @@ Rule: YearAdBc
 )
 :year -->
  :year.YearTemp = {kind = "positive", rule = "YearAdBc"}
+
+Rule: Present
+
+// Present
+(
+ ( Present )
+)
+:date
+-->
+ :date.TempDate = {rule = "Present"}
+
+Rule: Month
+Priority: 30
+// Month 
+(
+  (MONTH_NAME)
+   {Token.string == "-"}|
+   {Token.string == "to"}
+)
+:date
+-->
+ :date.MonthTemp = {rule = "Month"}
 
 Rule: YearSpan1
 // the early 90s
