@@ -14,7 +14,7 @@ WORKDIR ResumeParser/ResumeTransducer
 
 ENV GATE_HOME=/ResumeParser/GATEFiles
 
-RUN wget -O 'parser_api.py' 'https://gist.githubusercontent.com/arpitgoyalhtmedia/1ebda74744bf0076c872b7d92b723bd6/raw/406b82dd0400f1769fe970b11b7cd218e77dd19a/parser_api.py'
+RUN wget -O 'parser_api.py' 'https://gist.githubusercontent.com/argoyal/1ebda74744bf0076c872b7d92b723bd6/raw/effd76f84328355d953a4b900c3ec10be9ed87ae/parser_api.py'
 
 RUN mkdir service_resumes
 
