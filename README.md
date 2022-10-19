@@ -150,3 +150,20 @@ I tried my best to not blow in the face of user, but these are some gotchas:
 ```		
 ## How does the parse work?
 Parse uses the Engligh grammar engine provided by GATE through its ANNIE framework. The output is then transduced using the grammar rules and lists specifically written for resume parsing. The JAPE grammar defines a generic set of rules that complies with popular ways of resume writing. It takes Proper nouns from lists and applies them to rules to identify entities. Explore the source code and read about GATE for more details. Also, feel free to pose questions.
+
+## Docker Support and API endpoints
+Docker supported has been implemented which exposes an endpoint written in Flask (python).
+
+To expose the API endpoint use:
+
+```bash
+docker pull spotmentor/parser-api:latest
+```
+```bash
+docker run -p 9100:9100 spotmentor/parser-api:latest
+```
+
+This exposes the URL at http://localhost:9100/
+
+For details visit: https://hub.docker.com/r/spotmentor/parser-api/
+For any queries regarding docker contact: arpitgoyal[dot]thunderbird[at]gmail[dot]com
